@@ -7,15 +7,48 @@
   min-height: 100vh;
 }
 
-.description {
-  display: inherit;
-  justify-content: inherit;
-  align-items: inherit;
-  font-size: 0.85rem;
+.diceForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
   max-width: var(--max-width);
   width: 100%;
   z-index: 2;
+}
+
+.diceForm * {
+  font-size: 1rem;
   font-family: var(--font-mono);
+}
+
+.diceForm > label {
+  padding-bottom: 1rem;
+}
+
+.diceForm > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  padding-bottom: 1rem;
+}
+
+.diceForm > div input {
+  text-align: center;
+  font-size: 1rem;
+}
+
+.diceForm button {
+  padding: 0.2rem 0.4rem;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+
+.diceForm button:hover {
+  background-color: #cfcfcf;
+  cursor: pointer;
 }
 
 .description a {
