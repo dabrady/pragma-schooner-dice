@@ -1,26 +1,7 @@
+import { Category, ScoreCard } from '@/app/types';
+
 export const DICE_KEY = 'dice';
 export const NUM_DICE = 5;
-
-export enum Category {
-  ONES = 'ONES',
-  TWOS = 'TWOS',
-  THREES = 'THREES',
-  FOURS = 'FOURS',
-  FIVES = 'FIVES',
-  SIXES = 'SIXES',
-  SEVENS = 'SEVENS',
-  EIGHTS = 'EIGHTS',
-
-  THREE_OF_A_KIND = 'THREE_OF_A_KIND',
-  FOUR_OF_A_KIND = 'FOUR_OF_A_KIND',
-
-  FULL_HOUSE = 'FULL_HOUSE',
-  SMALL_STRAIGHT = 'SMALL_STRAIGHT',
-  ALL_DIFFERENT = 'ALL_DIFFERENT',
-  LARGE_STRAIGHT = 'LARGE_STRAIGHT',
-  SCHOONER = 'SCHOONER',
-  CHANCE = 'CHANCE',
-}
 
 /**
  * Returns a function that, given a dice roll, sums all values equal to a
@@ -35,6 +16,7 @@ function sumOfAll(targetValue?: int) {
       .reduce((sum, v) => sum + v, 0);
   };
 }
+
 export const SCORE_FUNCTIONS = {
   [Category.ONES]: sumOfAll(1),
   [Category.TWOS]: sumOfAll(2),
@@ -47,12 +29,12 @@ export const SCORE_FUNCTIONS = {
 
   [Category.THREE_OF_A_KIND]: sumOfAll(),
   [Category.FOUR_OF_A_KIND]: sumOfAll(),
-
   [Category.FULL_HOUSE]: function score(_) { return 25; },
   [Category.SMALL_STRAIGHT]: function score(_) { return 30; },
   [Category.ALL_DIFFERENT]: function score(_) { return 35; },
   [Category.LARGE_STRAIGHT]: function score(_) { return 40; },
   [Category.SCHOONER]: function score(_) { return 50; },
+
   [Category.CHANCE]: function score(diceRoll: int[]) {
     return diceRoll.reduce((sum, v) => sum + v, 0);
   }

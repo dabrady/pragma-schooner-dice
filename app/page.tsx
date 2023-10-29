@@ -3,20 +3,17 @@
 import Image from 'next/image';
 import { useFormState } from 'react-dom';
 
-import {
-  DICE_KEY,
-  NUM_DICE,
-  Category,
-} from '@/app/constants';
+import { DICE_KEY, NUM_DICE } from '@/app/constants';
+import { Category, ScoreCard } from '@/app/types';
 import _submitRoll from '@/app/actions/submitRoll';
 import styles from './page.module.css';
 
 const initialState: {
   diceRoll: int[];
-  categories: { [key: Category]: int };
+  scoreCard: ScoreCard;
 } = {
   diceRoll: [] as int[],
-  categories: {} as { [key: Category]: int },
+  scoreCard: {} as ScoreCard,
 };
 
 export default function Home() {
@@ -43,8 +40,10 @@ export default function Home() {
       {judgment.diceRoll.length
         ? (
           <div className={styles.description}>
-            <h1>Judgment</h1>
-            <p>{judgment.categories.toString()}</p>
+            <h1>Score Card</h1>
+            <p>
+              <pre>{JSON.stringify(judgment.scoreCard, null, 2)}</pre>
+            </p>
           </div>
         )
        : null}
