@@ -2,7 +2,7 @@
 
 import { DICE_KEY } from '@/app/constants';
 import { Judgment } from '@/app/types';
-import { topCategories } from '@/app/utils';
+import { makeScoreCard, topCategories } from '@/app/utils';
 
 export default async function submitRoll(
   previousState: Judgment,
@@ -12,6 +12,6 @@ export default async function submitRoll(
 
   return {
     diceRoll,
-    scoreCard: topCategories(diceRoll),
+    scoreCard: makeScoreCard(topCategories(diceRoll), diceRoll),
   };
 }

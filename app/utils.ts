@@ -32,7 +32,7 @@ export function atLeast(value: number): (value: number) => boolean {
  * Determines if any single value occurs a given number of times in a given dice
  * roll.
  */
-export function hasFrequency(diceRoll: number[], target: number | ((v: number) => number)): boolean {
+export function hasFrequency(diceRoll: number[], target: number | ((v: number) => boolean)): boolean {
   // Build a frequency map, then check if any value has the target frequency.
   return !!find(countBy(diceRoll), (freq) => (
     typeof target == 'function' ? target(freq) : freq == target
@@ -56,6 +56,20 @@ export function qualifyingCategories(diceRoll: number[]): Category[] {
   }
 
   return keys(pickBy(CATEGORY_QUALIFIERS, matches(diceRoll))) as Category[];
+}
+
+/**
+ * A convenient way of mapping a set of categories to their score for a given
+ * dice roll.
+ */
+export function makeScoreCard(categories: Category[], diceRoll: number[])
+: { [key in Category]?: number } {
+  return categories.reduce(
+    function buildScoreCard(scoreCard, category) {
+      scoreCard[category] = score(category, diceRoll);
+      return scoreCard;
+    }, {} as { [key in Category]?: number }
+  );
 }
 
 /**
@@ -89,11 +103,6 @@ export function topCategories(diceRoll: number[]): Category[] {
 
   /** Returns a summary of how well a dice roll scores in qualifying categories. */
   function allRelevantScores(diceRoll: number[]): { [key in Category]?: number } {
-    return qualifyingCategories(diceRoll).reduce(
-      function buildScoreCard(scoreCard, category) {
-        scoreCard[category] = score(category, diceRoll);
-        return scoreCard;
-      }, {} as { [key in Category]?: number }
-    );
+    return makeScoreCard(qualifyingCategories(diceRoll), diceRoll);
   }
 }

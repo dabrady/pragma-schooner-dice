@@ -10,7 +10,7 @@ import styles from './page.module.css';
 
 const initialState: Judgment  = {
   diceRoll: [] as number[],
-  scoreCard: [] as Category[],
+  scoreCard: {} as { [key in Category]?: number },
 };
 
 export default function Home() {

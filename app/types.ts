@@ -21,5 +21,5 @@ export enum Category {
 
 export type Judgment = {
   diceRoll: number[];
-  scoreCard: Category[];
+  scoreCard: { [key in Category]?: number };
 };
