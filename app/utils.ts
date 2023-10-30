@@ -1,7 +1,9 @@
 import {
   countBy,
   find,
+  lte,
   keys,
+  partial,
   pickBy,
   sum,
 } from 'lodash';
@@ -21,18 +23,39 @@ export function sumOfAll(targetValue?: number): (diceRoll: number[]) => number {
   };
 }
 
+/** A simple helper that generates a predicate for checking if one number is at least another. */
+export function atLeast(value: number): (value: number) => boolean {
+  return partial(lte, value);
+}
+
 /**
  * Determines if any single value occurs a given number of times in a given dice
  * roll.
  */
-export function hasFrequency(diceRoll: number[], frequency: number): boolean {
+export function hasFrequency(diceRoll: number[], target: number | ((v: number) => number)): boolean {
   // Build a frequency map, then check if any value has the target frequency.
-  return !!find(countBy(diceRoll), (freq) => freq == frequency);
+  return !!find(countBy(diceRoll), (freq) => (
+    typeof target == 'function' ? target(freq) : freq == target
+  ));
 }
 
 /** Calculates the score of the given dice roll in the given category. */
 export function score(category: Category, diceRoll: number[]): number {
   return SCORE_FUNCTIONS[category](diceRoll);
+}
+
+/**
+ * Returns the categories which match the given dice roll, based on the result
+ * of their qualifying predicate function.
+ */
+export function qualifyingCategories(diceRoll: number[]): Category[] {
+  function matches(diceRoll: number[]) {
+    return function matchesDiceRoll(predicateFn: (diceRoll: number[]) => boolean) {
+      return predicateFn(diceRoll);
+    }
+  }
+
+  return keys(pickBy(CATEGORY_QUALIFIERS, matches(diceRoll))) as Category[];
 }
 
 /**
@@ -72,19 +95,5 @@ export function topCategories(diceRoll: number[]): Category[] {
         return scoreCard;
       }, {} as { [key in Category]?: number }
     );
-  }
-
-  /**
-   * Returns the categories which match the given dice roll, based on the result
-   * of their qualifying predicate function.
-   */
-  function qualifyingCategories(diceRoll: number[]): Category[] {
-    function matches(diceRoll: number[]) {
-      return function matchesDiceRoll(predicateFn: (diceRoll: number[]) => boolean) {
-        return predicateFn(diceRoll);
-      }
-    }
-
-    return keys(pickBy(CATEGORY_QUALIFIERS, matches(diceRoll))) as Category[];
   }
 }

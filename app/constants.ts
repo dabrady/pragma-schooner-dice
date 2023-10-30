@@ -4,11 +4,10 @@ import {
   find,
   slice,
   sortBy,
-  sum,
   uniq,
 } from 'lodash';
 import { Category } from '@/app/types';
-import { hasFrequency, sumOfAll } from '@/app/utils';
+import { atLeast, hasFrequency, sumOfAll } from '@/app/utils';
 
 export const DICE_KEY = 'dice';
 export const NUM_DICE = 5;
@@ -32,12 +31,12 @@ export const CATEGORY_QUALIFIERS = {
 
   /* At least three dice are the same. */
   [Category.THREE_OF_A_KIND]: function qualifies(diceRoll: number[]): boolean {
-    return hasFrequency(diceRoll, 3)
+    return hasFrequency(diceRoll, atLeast(3));
   },
 
   /* At least four dice are the same. */
   [Category.FOUR_OF_A_KIND]: function qualifies(diceRoll: number[]): boolean {
-    return hasFrequency(diceRoll, 4);
+    return hasFrequency(diceRoll, atLeast(4));
   },
 
   /* Three of a kind plus a pair. */
@@ -84,14 +83,11 @@ export const SCORE_FUNCTIONS = {
 
   [Category.THREE_OF_A_KIND]: sumOfAll(),
   [Category.FOUR_OF_A_KIND]: sumOfAll(),
+  [Category.CHANCE]: sumOfAll(),
 
   [Category.FULL_HOUSE]: function score(_: number[]): number { return 25; },
   [Category.SMALL_STRAIGHT]: function score(_: number[]): number { return 30; },
   [Category.ALL_DIFFERENT]: function score(_: number[]): number { return 35; },
   [Category.LARGE_STRAIGHT]: function score(_: number[]): number { return 40; },
   [Category.SCHOONER]: function score(_: number[]): number { return 50; },
-
-  [Category.CHANCE]: function score(diceRoll: number[]): number {
-    return sum(diceRoll);
- }
 };
