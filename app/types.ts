@@ -19,4 +19,7 @@ export enum Category {
   CHANCE = 'CHANCE',
 }
 
-export type ScoreCard = { [key: Category]: int };
+export type Judgment = {
+  diceRoll: number[];
+  scoreCard: Category[];
+};
